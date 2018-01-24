@@ -18,7 +18,7 @@ public class DemoJdbcDao {
 	 * @param student
 	 * @return
 	 */
-	public List<Student> queryAllStudents(Student student) {
+	public List<Student> queryAllStudents() {
 		Session session = HibernateSessionFactory.getSession();
 		String hql = "from Student";
 
@@ -62,7 +62,7 @@ public class DemoJdbcDao {
 			query.setParameter("studentId", student.getStudentId().trim());
 		}
 		if (f2) {
-			query.setParameter("studentName", "%"+student.getStudentName().trim()+"%");
+			query.setParameter("studentName", "%" + student.getStudentName().trim() + "%");
 		}
 		if (f3) {
 			query.setParameter("deptId", student.getDeptId().trim());
@@ -78,11 +78,13 @@ public class DemoJdbcDao {
 	 * @param student
 	 */
 	public void delStudent(Student student) {
+		String studentId = student.getStudentId();
 		Session session = HibernateSessionFactory.getSession();
 		Transaction trans = session.beginTransaction();
 		try {
 			session.delete(student);
 			trans.commit();
+			System.out.println("删除成功，删除ID为" + studentId);
 		} catch (HibernateException e) {
 			// trans.rollback();有异常内部会自行回滚
 			System.out.println("删除异常，无法删除");

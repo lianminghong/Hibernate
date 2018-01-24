@@ -11,8 +11,8 @@ public class DemoJdbcServiceImpl implements DemoJdbcService{
 
 	
 	
-	public List<Student> queryAllStudents(Student student){
-		List<Student> list = dao.queryAllStudents(student);
+	public List<Student> queryAllStudents(){
+		List<Student> list = dao.queryAllStudents();
 		return list;
 	}
 	

@@ -2,6 +2,7 @@ package cn.ccc.utils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,9 +25,10 @@ public abstract class BaseServlet extends HttpServlet {
 			msg = "execute";
 		}
 
+		Class c = this.getClass();
 		try {
-			this.getClass().getMethod(msg, HttpServletRequest.class, HttpServletResponse.class).invoke(msg, request,
-					response);
+			Method method = c.getMethod(msg, HttpServletRequest.class, HttpServletResponse.class);
+			method.invoke(c.newInstance(), request, response);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException("没有此方法" + e.getMessage(), e);
 		} catch (IllegalAccessException e) {
@@ -39,5 +41,12 @@ public abstract class BaseServlet extends HttpServlet {
 
 	}
 
+	/**
+	 * 默认执行全表查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
 	public abstract void execute(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }
