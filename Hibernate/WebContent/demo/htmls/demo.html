@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../../jq/jquery-2.1.4.js"></script>
+    <style type="text/css">
+        table {
+            border: 1px solid gray;
+            border-collapse: collapse;
+            width: 60%;
+        }
+
+        td {
+            border: 1px solid gray;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>学院编号</th>
+            <th>操作</th>
+        </tr>
+
+    </table>
+</body>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajax({
+            type : "Get",
+            // async : true,
+            url : "http://localhost:8080/Hibernate/DemoJdbcServlet?msg=execute",
+            data : "",
+            dataType : "json",
+            contentType : "application/json; charset=utf-8",
+            success : function(data){
+                console.log("111");
+            },
+            error : function(data){
+                console.log("222");
+            }
+        })
+    });
+</script>
+
+</html>

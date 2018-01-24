@@ -6,9 +6,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import cn.ccc.demo.service.DemoJdbcServiceImpl;
 import cn.ccc.domain.Student;
 import cn.ccc.utils.BaseServlet;
+import net.sf.json.JSONArray;
 
 /**
  * Servlet implementation class DemoJdbcServlet
@@ -27,8 +29,11 @@ public class DemoJdbcServlet extends BaseServlet {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<Student> list = impl.queryAllStudents();
 		request.getSession().setAttribute("list", list);
-		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
-		;
+//		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
+//		request.getRequestDispatcher("/demo/htmls/demo.html").forward(request, response);
+		PrintWriter out = response.getWriter();
+		JSONArray json1 = JSONArray.fromObject(list);
+		out.print(json1);;
 	}
 
 	/**
@@ -46,11 +51,8 @@ public class DemoJdbcServlet extends BaseServlet {
 
 		Student student = new Student();
 		student.setStudentId(studentId);
-		;
 		student.setStudentName(studentName);
-		;
 		student.setAge(age);
-		;
 		student.setDeptId(deptId);
 
 		List<Student> list = impl.queryStudents(student);
@@ -96,7 +98,7 @@ public class DemoJdbcServlet extends BaseServlet {
 		student.setStudentId(studentId);
 
 		impl.delStudent(student);
-//		response.sendRedirect(getServletContext().getContextPath());
+/*		response.sendRedirect(getServletContext().getContextPath());*/
 		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
 	}
 }
