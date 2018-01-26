@@ -9,6 +9,7 @@ import org.hibernate.classic.Session;
 
 import cn.ccc.domain.Student;
 import cn.hncu.hib.HibernateSessionFactory;
+import net.sf.json.JSONArray;
 
 public class DemoJdbcDao {
 

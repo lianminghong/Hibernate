@@ -1,7 +1,9 @@
 package cn.ccc.demo.servlet;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import cn.ccc.demo.service.DemoJdbcServiceImpl;
 import cn.ccc.domain.Student;
 import cn.ccc.utils.BaseServlet;
-import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Servlet implementation class DemoJdbcServlet
@@ -32,8 +34,10 @@ public class DemoJdbcServlet extends BaseServlet {
 //		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
 //		request.getRequestDispatcher("/demo/htmls/demo.html").forward(request, response);
 		PrintWriter out = response.getWriter();
-		JSONArray json1 = JSONArray.fromObject(list);
-		out.print(json1);;
+		
+//		out.print();
+		out.flush();
+		out.close();
 	}
 
 	/**
@@ -101,4 +105,5 @@ public class DemoJdbcServlet extends BaseServlet {
 /*		response.sendRedirect(getServletContext().getContextPath());*/
 		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
 	}
+	
 }
