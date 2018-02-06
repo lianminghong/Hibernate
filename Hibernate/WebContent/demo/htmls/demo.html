@@ -12,6 +12,7 @@
             width: 60%;
         }
 
+        th,
         td {
             border: 1px solid gray;
             padding: 5px;
@@ -20,7 +21,7 @@
 </head>
 
 <body>
-    <table>
+    <table id="tab">
         <tr>
             <th>学号</th>
             <th>姓名</th>
@@ -32,19 +33,28 @@
     </table>
 </body>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.ajax({
-            type : "Get",
+            type: "Get",
             // async : true,
-            url : "http://localhost:8080/Hibernate/DemoJdbcServlet?msg=execute",
-            data : "",
-            dataType : "json",
-            contentType : "application/json; charset=utf-8",
-            success : function(data){
-                console.log("111");
+            url: "/Hibernate/DemoJdbcServlet",
+            data: {
+                msg: "execute"
             },
-            error : function(data){
-                console.log("222");
+            dataType: "json",
+            //            contentType : "application/text; charset=utf-8",
+            success: function (data) {
+                data.forEach(item => {
+                    var addTr = "<tr><td>" + item.studentId + 
+                                "</td><td>" + item.studentName + 
+                                "</td><td>" + item.age + 
+                                "</td><td>" + item.deptId + 
+                                "</td><td><a href='/Hibernate/DemoJdbcServlet?msg=delStudent&studentId="+item.studentId+"'>删除</a></td></tr>";
+                    $("#tab").append(addTr);
+                });
+            },
+            error: function (data) {
+                console.log("数据接收有误，请查看后台输出日志");
             }
         })
     });

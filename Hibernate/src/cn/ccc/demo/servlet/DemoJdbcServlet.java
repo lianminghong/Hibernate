@@ -1,9 +1,7 @@
 package cn.ccc.demo.servlet;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import cn.ccc.demo.service.DemoJdbcServiceImpl;
 import cn.ccc.domain.Student;
 import cn.ccc.utils.BaseServlet;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -30,12 +29,12 @@ public class DemoJdbcServlet extends BaseServlet {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<Student> list = impl.queryAllStudents();
-		request.getSession().setAttribute("list", list);
+//		request.getSession().setAttribute("list", list);
 //		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
 //		request.getRequestDispatcher("/demo/htmls/demo.html").forward(request, response);
 		PrintWriter out = response.getWriter();
-		
-//		out.print();
+		JSONArray jb = JSONArray.fromObject(list);
+		out.print(jb);
 		out.flush();
 		out.close();
 	}

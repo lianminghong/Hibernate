@@ -50,10 +50,10 @@ public class Student {
 		this.deptId = deptId;
 	}
 
-	@Override
-	public String toString() {
-		return "Student [studentId=" + studentId + ", studentName=" + studentName + ", age=" + age + ", deptId="
-				+ deptId + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "Student [studentId=" + studentId + ", studentName=" + studentName + ", age=" + age + ", deptId="
+//				+ deptId + "]";
+//	}
 
 }
