@@ -17,10 +17,35 @@
             border: 1px solid gray;
             padding: 5px;
         }
+
+        .div_black {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .div_iterm {
+            display: none;
+            width: 50%;
+            height: 50%;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 1);
+        }
     </style>
 </head>
 
 <body>
+    <div style="margin-bottom:10px;">
+        <input type="button" id="addBtn" name="addBtn" value="添加记录" />
+    </div>
     <table id="tab">
         <tr>
             <th>学号</th>
@@ -29,10 +54,36 @@
             <th>学院编号</th>
             <th>操作</th>
         </tr>
-
     </table>
+
+    <!-- 遮盖层start -->
+    <div class="div_black" id="div_black"></div>
+    <!-- 遮盖层end -->
+
+    <!-- 添加信息框start -->
+    <div class="div_iterm" id="div_iterm">
+        <div style="margin:auto;">
+            <label>学号</label>
+            <input class="iterm_name" />
+            <br/>
+            <label>姓名</label>
+            <input class="team_name" />
+            <br/>
+            <label>年龄</label>
+            <input class="iterm_name" />
+            <br/>
+            <label>学院编号</label>
+            <input class="team_name" />
+            <br/>
+            <button class="btn" id="submit_btn">submit</button>
+            <button class="btn" id="close_btn">close</button>
+        </div>
+    </div>
+    <!-- 添加信息框end -->
 </body>
 <script type="text/javascript">
+
+    /*初始化查询出列表*/
     $(document).ready(function () {
         $.ajax({
             type: "Get",
@@ -45,11 +96,11 @@
             //            contentType : "application/text; charset=utf-8",
             success: function (data) {
                 data.forEach(item => {
-                    var addTr = "<tr><td>" + item.studentId + 
-                                "</td><td>" + item.studentName + 
-                                "</td><td>" + item.age + 
-                                "</td><td>" + item.deptId + 
-                                "</td><td><a href='/Hibernate/DemoJdbcServlet?msg=delStudent&studentId="+item.studentId+"'>删除</a></td></tr>";
+                    var addTr = "<tr><td>" + item.studentId +
+                        "</td><td>" + item.studentName +
+                        "</td><td>" + item.age +
+                        "</td><td>" + item.deptId +
+                        "</td><td><a href='/Hibernate/DemoJdbcServlet?msg=delStudent&studentId=" + item.studentId + "'>删除</a></td></tr>";
                     $("#tab").append(addTr);
                 });
             },
@@ -57,6 +108,31 @@
                 console.log("数据接收有误，请查看后台输出日志");
             }
         })
+    });
+
+    /*绑定添加按钮，弹出添加信息,重置清空输入框*/
+    $('#addBtn').bind('click', function () {
+        $('#div_black').css('display', 'flex');
+        $('#div_iterm').css('display', 'flex');
+        $('#div_iterm input').each(function () {
+            $(this).val("");
+        });
+    });
+
+    /*绑定提交按钮*/
+    $('#submit_btn').bind('click', function () {
+        $('#div_black').css('display', 'none');
+        $('#div_iterm').css('display', 'none');
+        //下面可以向服务器请求
+
+    });
+
+    /*绑定取消按钮*/
+    $('#close_btn').bind('click', function () {
+        $('#div_black').css('display', 'none');
+        $('#div_iterm').css('display', 'none');
+        //下面可以向服务器请求
+
     });
 </script>
 

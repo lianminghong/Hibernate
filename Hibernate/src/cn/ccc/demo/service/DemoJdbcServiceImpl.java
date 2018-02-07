@@ -21,8 +21,8 @@ public class DemoJdbcServiceImpl implements DemoJdbcService{
 		return list;
 	}
 	
-	public void addStudents(Student student){
-		dao.addStudents(student);
+	public Boolean addStudents(Student student){
+		return dao.addStudents(student);
 	}
 	
 	public void delStudent(Student student){

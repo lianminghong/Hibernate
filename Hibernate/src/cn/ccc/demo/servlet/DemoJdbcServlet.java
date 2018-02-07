@@ -11,7 +11,6 @@ import cn.ccc.demo.service.DemoJdbcServiceImpl;
 import cn.ccc.domain.Student;
 import cn.ccc.utils.BaseServlet;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * Servlet implementation class DemoJdbcServlet
@@ -62,6 +61,8 @@ public class DemoJdbcServlet extends BaseServlet {
 		request.setAttribute("list", list);
 		PrintWriter out = response.getWriter();
 		out.print("1");
+		out.flush();
+		out.close();
 	}
 
 	/**
@@ -83,8 +84,16 @@ public class DemoJdbcServlet extends BaseServlet {
 		student.setAge(age);
 		student.setDeptId(deptId);
 
-		impl.addStudents(student);
-		response.sendRedirect(getServletContext().getContextPath());
+		PrintWriter out = response.getWriter();
+		Boolean isSuc = impl.addStudents(student);
+		if(isSuc){
+			out.print("1");
+		}else{
+			out.print("2");
+		}
+		out.flush();
+		out.close();
+//		response.sendRedirect(getServletContext().getContextPath());
 	}
 
 	/**

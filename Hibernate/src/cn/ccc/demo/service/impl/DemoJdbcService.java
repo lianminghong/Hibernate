@@ -9,7 +9,7 @@ public interface DemoJdbcService {
 
 	public List<Student> queryStudents(Student student);
 
-	public void addStudents(Student student);
+	public Boolean addStudents(Student student);
 
 	public void delStudent(Student student);
 }

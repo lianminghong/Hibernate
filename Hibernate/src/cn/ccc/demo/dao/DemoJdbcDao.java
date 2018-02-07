@@ -99,18 +99,22 @@ public class DemoJdbcDao {
 	 * 
 	 * @param student
 	 */
-	public void addStudents(Student student) {
+	public Boolean addStudents(Student student) {
+		Boolean isSuc = false;
 		Session session = HibernateSessionFactory.getSession();
 		Transaction trans = session.beginTransaction();
 		try {
 			session.saveOrUpdate(student);
 			trans.commit();
+			isSuc = true;
 		} catch (HibernateException e) {
 			System.out.println("插入或者更新异常");
+			isSuc = false;
 		} finally {
 			// trans.rollback();有异常内部会自行回滚
 			HibernateSessionFactory.closeSession();
 		}
+		return isSuc;
 	}
 
 }
