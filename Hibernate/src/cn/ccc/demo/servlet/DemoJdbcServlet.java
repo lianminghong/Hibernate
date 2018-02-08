@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import cn.ccc.demo.service.DemoJdbcServiceImpl;
 import cn.ccc.domain.Student;
 import cn.ccc.utils.BaseServlet;
@@ -28,9 +27,11 @@ public class DemoJdbcServlet extends BaseServlet {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<Student> list = impl.queryAllStudents();
-//		request.getSession().setAttribute("list", list);
-//		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
-//		request.getRequestDispatcher("/demo/htmls/demo.html").forward(request, response);
+		// request.getSession().setAttribute("list", list);
+		// request.getRequestDispatcher("/jsps/demo.jsp").forward(request,
+		// response);
+		// request.getRequestDispatcher("/demo/htmls/demo.html").forward(request,
+		// response);
 		PrintWriter out = response.getWriter();
 		JSONArray jb = JSONArray.fromObject(list);
 		out.print(jb);
@@ -75,25 +76,25 @@ public class DemoJdbcServlet extends BaseServlet {
 	public void addStudents(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String studentId = request.getParameter("studentId");
 		String studentName = request.getParameter("studentName");
-		Integer age = Integer.valueOf(request.getParameter("age"));
+		String age = request.getParameter("age");
 		String deptId = request.getParameter("deptId");
 
 		Student student = new Student();
 		student.setStudentId(studentId);
 		student.setStudentName(studentName);
-		student.setAge(age);
+		student.setAge(Integer.parseInt(age));
 		student.setDeptId(deptId);
 
 		PrintWriter out = response.getWriter();
-		Boolean isSuc = impl.addStudents(student);
-		if(isSuc){
+		Boolean isSuc = impl.addStudents(student);// 返回true表示插入成功，false插入失败
+		if (isSuc) {
 			out.print("1");
-		}else{
+		} else {
 			out.print("2");
 		}
 		out.flush();
 		out.close();
-//		response.sendRedirect(getServletContext().getContextPath());
+		// response.sendRedirect(getServletContext().getContextPath());
 	}
 
 	/**
@@ -109,9 +110,17 @@ public class DemoJdbcServlet extends BaseServlet {
 		Student student = new Student();
 		student.setStudentId(studentId);
 
-		impl.delStudent(student);
-/*		response.sendRedirect(getServletContext().getContextPath());*/
-		request.getRequestDispatcher("/jsps/demo.jsp").forward(request, response);
+		PrintWriter out = response.getWriter();
+		Boolean isDel = impl.delStudent(student);
+		if (isDel) {
+			out.print("1");
+		} else {
+			out.print("2");
+		}
+		out.flush();
+		out.close();
+		// request.getRequestDispatcher("/jsps/demo.jsp").forward(request,
+		// response);
 	}
-	
+
 }

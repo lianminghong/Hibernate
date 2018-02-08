@@ -11,5 +11,5 @@ public interface DemoJdbcService {
 
 	public Boolean addStudents(Student student);
 
-	public void delStudent(Student student);
+	public Boolean delStudent(Student student);
 }

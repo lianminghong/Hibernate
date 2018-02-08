@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>实现增删改查</title>
     <script type="text/javascript" src="../../jq/jquery-2.1.4.js"></script>
     <style type="text/css">
         table {
@@ -63,24 +63,25 @@
     <!-- 添加信息框start -->
     <div class="div_iterm" id="div_iterm">
         <div style="margin:auto;">
-            <label>学号</label>
-            <input class="iterm_name" />
-            <br/>
-            <label>姓名</label>
-            <input class="team_name" />
-            <br/>
-            <label>年龄</label>
-            <input class="iterm_name" />
-            <br/>
-            <label>学院编号</label>
-            <input class="team_name" />
-            <br/>
-            <button class="btn" id="submit_btn">submit</button>
-            <button class="btn" id="close_btn">close</button>
+            <div>学号
+                <input class="" placeholder="请输入学号" id="studentId" value="" onkeyup="value=value.replace(/[^\d]/g,'')" />
+            </div>
+            <div>姓名
+                <input class="" placeholder="请输入姓名" id="studentName" value="" onkeyup="value=value.replace(/[@#\$%\^&\*]+/g,'')" />
+            </div>
+            <div>年龄
+                <input class="" placeholder="请输入年龄" id="age" value="" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+            </div>
+            <div>学院编号
+                <input class="" placeholder="请输入学院编号" id="deptId" value="" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+            </div>
+            <button class="" id="submit_btn">submit</button>
+            <button class="" id="close_btn">close</button>
         </div>
     </div>
     <!-- 添加信息框end -->
 </body>
+
 <script type="text/javascript">
 
     /*初始化查询出列表*/
@@ -100,7 +101,8 @@
                         "</td><td>" + item.studentName +
                         "</td><td>" + item.age +
                         "</td><td>" + item.deptId +
-                        "</td><td><a href='/Hibernate/DemoJdbcServlet?msg=delStudent&studentId=" + item.studentId + "'>删除</a></td></tr>";
+                        /*"</td><td><a href='/Hibernate/DemoJdbcServlet?msg=delStudent&studentId=" + item.studentId + "'>删除</a></td></tr>";*/
+                        "</td><td><a href='javascript:void(0);' onclick='delfun(this)'>删除</a></td></tr>"
                     $("#tab").append(addTr);
                 });
             },
@@ -121,19 +123,105 @@
 
     /*绑定提交按钮*/
     $('#submit_btn').bind('click', function () {
+        var studentId = $('#studentId').val();
+        var studentName = $('#studentName').val();
+        var age = $('#age').val();
+        var deptId = $('#deptId').val();
+
+        if (studentId == "") {
+            alert("非数字");
+            return;
+        }
+        if (studentName == "") {
+            alert("姓名不能为空");
+            return;
+        }
+        if (age == "") {
+            alert("年龄不能为空");
+            return;
+        }
+        if (deptId == "") {
+            alert("学院编号不能为空");
+            return;
+        }
+
+        $.ajax({
+            type: "Get",
+            url: "/Hibernate/DemoJdbcServlet",
+            data: {
+                msg: "addStudents",
+                studentId: studentId,
+                studentName: studentName,
+                age: age,
+                deptId: deptId
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    console.log("插入成功");
+                    var addTr = "<tr><td>" + studentId +
+                        "</td><td>" + studentName +
+                        "</td><td>" + age +
+                        "</td><td>" + deptId +
+                        /*"</td><td><a href='/Hibernate/DemoJdbcServlet?msg=delStudent&studentId=" + studentId + "'>删除</a></td></tr>";*/
+                        "</td><td><a href='javascript:void(0);' onclick='delfun(this)'>删除</a></td></tr>"
+                    $("#tab").append(addTr);
+                } else {
+                    console.log("插入异常");
+                }
+            },
+            error:function(errData){
+                console.log("插入异常");
+            }
+        })
+
+        /*隐藏添加面板*/
         $('#div_black').css('display', 'none');
         $('#div_iterm').css('display', 'none');
-        //下面可以向服务器请求
 
     });
 
     /*绑定取消按钮*/
     $('#close_btn').bind('click', function () {
+        /*隐藏添加面板*/
         $('#div_black').css('display', 'none');
         $('#div_iterm').css('display', 'none');
+        $('#div_iterm input').each(function () {
+            $(this).val("");
+        });
         //下面可以向服务器请求
 
     });
+
+    function delfun(arg) {
+        console.log($(arg).parent().parent().find('td:first').html());
+        var studentId = $(arg).parent().parent().find('td:first').html();//获取当前行的学号
+        var thisTr = $(arg).parent().parent();//获取当前行对象
+        var thisTds = $(arg).parent().parent().find('td');//获取当前行内所有的td
+        $.ajax({
+            type: "Get",
+            url: "/Hibernate/DemoJdbcServlet",
+            data: {
+                msg: "delStudent",
+                studentId: studentId
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    console.log("删除成功");
+                    thisTds.each(function () {
+                        //清空
+                        $(this).text("");
+                    });
+                    thisTr.remove();
+                }
+            },
+            error:function(errData){
+                console.log("删除异常");
+            }
+        })
+    }
+
 </script>
 
 </html>

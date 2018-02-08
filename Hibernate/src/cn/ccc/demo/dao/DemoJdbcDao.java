@@ -78,7 +78,8 @@ public class DemoJdbcDao {
 	 * 
 	 * @param student
 	 */
-	public void delStudent(Student student) {
+	public Boolean delStudent(Student student) {
+		Boolean isDel = false;
 		String studentId = student.getStudentId();
 		Session session = HibernateSessionFactory.getSession();
 		Transaction trans = session.beginTransaction();
@@ -86,12 +87,14 @@ public class DemoJdbcDao {
 			session.delete(student);
 			trans.commit();
 			System.out.println("删除成功，删除ID为" + studentId);
+			isDel = true;
 		} catch (HibernateException e) {
 			// trans.rollback();有异常内部会自行回滚
 			System.out.println("删除异常，无法删除");
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
+		return isDel;
 	}
 
 	/**
