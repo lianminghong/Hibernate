@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/icon.css">
+
+    <script type="text/javascript" src="../../easyUI/jquery.min.js"></script>
+    <script type="text/javascript" src="../../easyUI/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../easyUI/locale/easyui-lang-zh_CN.js"></script>
+
+</head>
+
+<body class="easyui-layout">
+    <div id="tb" style="padding:3px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">添加用户</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑用户</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteUser()">删除用户</a>
+        <div>
+            <span>studentId:</span>
+            <input id="studentId" style="line-height:26px;border:1px solid #ccc">
+            <span>studentName:</span>
+            <input id="studentName" style="line-height:26px;border:1px solid #ccc">
+            <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">搜索</a>
+        </div>
+    </div>
+
+    <!-- 表格 -->
+    <table id="tt" class="easyui-datagrid" style="width:600px;height:250px" url="/Hibernate/DemoJdbcServlet?msg=execute" toolbar="#tb"
+        title="Load Data" iconCls="icon-save" rownumbers="true" pagination="true">
+        <thead>
+            <tr>
+                <th field="studentId" width="80">学号</th>
+                <th field="studentName" width="80">姓名</th>
+                <th field="age" width="80" align="right">年龄</th>
+                <th field="deptId" width="80" align="right">部门编号</th>
+            </tr>
+        </thead>
+    </table>
+
+</body>
+<script type="text/javascript">
+    function doSearch() {
+        $('#tt').datagrid('load', {
+            studentId: $('#studentId').val(),
+            studentName: $('#studentName').val()
+        });
+    }
+</script>
+
+</html>
