@@ -1,15 +1,19 @@
 package cn.ccc.demo.servlet;
 
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.util.List;
 
+import javax.activation.URLDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.ccc.demo.service.DemoJdbcServiceImpl;
+import cn.ccc.domain.PageBean;
 import cn.ccc.domain.Student;
 import cn.ccc.utils.BaseServlet;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Servlet implementation class DemoJdbcServlet
@@ -26,15 +30,23 @@ public class DemoJdbcServlet extends BaseServlet {
 	 */
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		List<Student> list = impl.queryAllStudents();
-		// request.getSession().setAttribute("list", list);
-		// request.getRequestDispatcher("/jsps/demo.jsp").forward(request,
-		// response);
-		// request.getRequestDispatcher("/demo/htmls/demo.html").forward(request,
-		// response);
+		response.setContentType("text/plain;charset=utf-8");//解决前端接收中文乱码
+		response.setCharacterEncoding("utf-8");//解决前端接收中文乱码
+		
+		String page = request.getParameter("page");
+		String rows = request.getParameter("rows");
+		PageBean pageBean = new PageBean(Integer.parseInt(page),Integer.parseInt(rows));
+		//分页查询
+		List<Student> list = impl.queryAllStudents(pageBean);
+		//统计总数
+		int total = impl.queryStudentCount();
+		
 		PrintWriter out = response.getWriter();
 		JSONArray jb = JSONArray.fromObject(list);
-		out.print(jb);
+		JSONObject result = new JSONObject();
+		result.put("rows", jb);
+		result.put("total", total);
+		out.print(result);
 		out.flush();
 		out.close();
 	}

@@ -7,34 +7,56 @@ import org.hibernate.Query;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 
+import cn.ccc.domain.PageBean;
 import cn.ccc.domain.Student;
 import cn.hncu.hib.HibernateSessionFactory;
-import net.sf.json.JSONArray;
 
 public class DemoJdbcDao {
-
+	Session session;
 	/**
 	 * 查询所有
 	 * 
 	 * @param student
 	 * @return
 	 */
-	public List<Student> queryAllStudents() {
-		Session session = HibernateSessionFactory.getSession();
-		String hql = "from Student";
+	public List<Student> queryAllStudents(PageBean pageBean) {
+		session = HibernateSessionFactory.getSession();
+		String hql = "from Student ";
 
 		List<Student> list = null;
 		try {
 			Query query = session.createQuery(hql);
+			query.setFirstResult((pageBean.getPage() - 1) * pageBean.getRows());
+			query.setMaxResults(pageBean.getRows());
 			list = query.list();
 		} catch (Exception e) {
-			System.out.println("查询全部异常，无法查询");
+			System.out.println("查询全部异常，无法查询/n"+e.getMessage());
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
 		return list;
 	}
 
+	
+	/**
+	 * 查询总记录数
+	 * @return
+	 */
+	public int queryStudentCount(){
+		session = HibernateSessionFactory.getSession();
+		String hql = "select count(*) from Student s";
+		int count = 0;
+		try {
+			Query query = session.createQuery(hql);
+			count = Integer.parseInt(query.list().get(0).toString());
+		} catch (Exception e) {
+			System.out.println("查询全部异常，无法查询/n"+e.getMessage());
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+		return count;
+	}
+	
 	/**
 	 * 根据条件查询
 	 * 
@@ -43,7 +65,7 @@ public class DemoJdbcDao {
 	 */
 	public List<Student> queryStudents(Student student) {
 		boolean f1 = false, f2 = false, f3 = false;
-		Session session = HibernateSessionFactory.getSession();
+		session = HibernateSessionFactory.getSession();
 		String hql = "from Student s where 1=1";
 		if (student.getStudentId() != null && student.getStudentId().trim().length() > 0) {
 			hql += "s.studentId =:studentId";
@@ -81,7 +103,7 @@ public class DemoJdbcDao {
 	public Boolean delStudent(Student student) {
 		Boolean isDel = false;
 		String studentId = student.getStudentId();
-		Session session = HibernateSessionFactory.getSession();
+		session = HibernateSessionFactory.getSession();
 		Transaction trans = session.beginTransaction();
 		try {
 			session.delete(student);
@@ -104,7 +126,7 @@ public class DemoJdbcDao {
 	 */
 	public Boolean addStudents(Student student) {
 		Boolean isSuc = false;
-		Session session = HibernateSessionFactory.getSession();
+		session = HibernateSessionFactory.getSession();
 		Transaction trans = session.beginTransaction();
 		try {
 			session.saveOrUpdate(student);

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/icon.css">
+
+    <script type="text/javascript" src="../../easyUI/jquery.min.js"></script>
+    <script type="text/javascript" src="../../easyUI/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../easyUI/locale/easyui-lang-zh_CN.js"></script>
+
+    <!-- 导入自定义验证js -->
+    <script type="text/javascript" src="../js/ow-validate.js"></script>
+
+
+</head>
+
+<body class="easyui-layout">
+    <!-- 表格 start -->
+    <table id="tt" class="easyui-datagrid" style="width:auto;height:auto"></table>
+    <!-- 表格 end -->
+
+    <!-- 新增面板 start -->
+    <div id="dlg" class="easyui-dialog" style="width:400px;height:250px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
+        <form id="fm" method="post">
+            <table cellspacing="10px;">
+                <tr>
+                    <td>学号:</td>
+                    <td>
+                        <input name="studentId" class="easyui-validatebox" data-options="required:true,validType:['integer','length[1,5]']" style="width: 200px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>姓名:</td>
+                    <td>
+                        <input name="studentName" class="easyui-validatebox" data-options="required:true,validType:'name'" style="width: 200px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>年龄:</td>
+                    <td>
+                        <input name="age" class="easyui-validatebox" data-options="required:true,validType:'age'" style="width: 200px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>部门编号:</td>
+                    <td>
+                        <input name="deptId" class="easyui-validatebox" data-options="required:true,validType:'integer'" style="width: 200px;">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="dlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+    </div>
+    <!-- 新增面板 end -->
+
+</body>
+<script type="text/javascript">
+
+    $(function () {
+        var url;
+        var editing; //判断用户是否处于编辑状态 
+        var flag;      //判断新增和修改方法
+        $('#tt').datagrid({
+            title: "Load Data",
+            url: "/Hibernate/DemoJdbcServlet?msg=execute",
+            method: "post",
+            columns: [[{
+                field: 'studentId',
+                title: '学号',
+                width: 100
+            }, {
+                field: 'studentName',
+                title: '姓名',
+                width: 100
+            }, {
+                field: 'age',
+                title: '年龄',
+                width: 100,
+                align: 'center'
+            }, {
+                field: 'deptId',
+                title: '部门编号',
+                width: 100,
+                align: 'center'
+            }
+            ]],
+            // singleSelect: true,//只让单选
+            // frozenColumns: [[
+            //     { field: 'ck', checkbox: true }]],
+            fitColumns: true,//自适应宽度，防止水平滚动
+            iconCls: 'icon-search',
+            striped: true,//隔行变色
+            pagination: true,//显示页栏
+            pageNumber: 1,//pagination : true时才生效  
+            pageSize: 10,//每页显示的记录条数，默认为10 
+            //pageSize: defaultPageSize,
+            pageList: [10, 15, 30, 45],//可以设置每页记录条数的列表           
+            beforePageText: '第',//页数文本框前显示的汉字           
+            afterPageText: '页    共 {pages} 页',
+            displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
+            pagePosition: "bottom",
+            rownumbers: true,//是否显示行号 
+            loadMsg: "玩命加载中",
+            //工具栏
+            toolbar: [{
+                text: '新增',
+                iconCls: 'icon-add',
+                handler: function () {
+                    if (editing == undefined) {
+                        // flag = 'add';
+                        //1 先取消所有的选中状态
+                        // $('#tt').datagrid('unselectAll');
+                        //2追加一行
+                        // $('#tt').datagrid('appendRow', { description: '' });
+                        //3获取当前页的行号
+                        // editing = $('#tt').datagrid('getRows').length - 1;
+                        //4开启编辑状态
+                        // $('#tt').datagrid('beginEdit', editing);
+                        $('#dlg').dialog('open').dialog('setTitle', '添加');
+                        $('#fm').form('clear');
+                        url = '';
+                    }
+                }
+            }, {
+                text: '修改',
+                iconCls: 'icon-edit',
+                handler: function () {
+
+
+                }
+            }, {
+                text: '删除',
+                iconCls: 'icon-remove',
+                handler: function () {
+
+                }
+            }]
+        });
+
+    });
+
+    /**  
+     * 搜索  
+     */
+    function doSearch() {
+        $('#tt').datagrid('load', {
+            studentId: $('#studentId').val(),
+            studentName: $('#studentName').val()
+        });
+    }
+</script>
+
+</html>

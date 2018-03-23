@@ -15,6 +15,7 @@
 </head>
 
 <body class="easyui-layout">
+    <!--  工具栏 start -->
     <div id="tb" style="padding:3px">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">添加用户</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑用户</a>
@@ -27,8 +28,9 @@
             <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">搜索</a>
         </div>
     </div>
+    <!--  工具栏 end -->
 
-    <!-- 表格 -->
+    <!-- 表格 start -->
     <table id="tt" class="easyui-datagrid" style="width:600px;height:250px" url="/Hibernate/DemoJdbcServlet?msg=execute" toolbar="#tb"
         title="Load Data" iconCls="icon-save" rownumbers="true" pagination="true">
         <thead>
@@ -40,9 +42,13 @@
             </tr>
         </thead>
     </table>
-
+    <!-- 表格 end -->
 </body>
 <script type="text/javascript">
+    var url;
+    /**  
+     * 搜索  
+     */
     function doSearch() {
         $('#tt').datagrid('load', {
             studentId: $('#studentId').val(),
