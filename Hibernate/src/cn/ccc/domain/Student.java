@@ -1,12 +1,13 @@
 package cn.ccc.domain;
 
 public class Student {
-	private String studentId;
+	private int Id;
+	private Integer studentId;
 	private String studentName;
 	private int age;
 	private String deptId;
 
-	public Student(String studentId, String studentName, int age, String deptId) {
+	public Student(Integer studentId, String studentName, int age, String deptId) {
 		// super();
 		this.studentId = studentId;
 		this.studentName = studentName;
@@ -18,11 +19,19 @@ public class Student {
 
 	}
 
-	public String getStudentId() {
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
+	}
+
+	public Integer getStudentId() {
 		return studentId;
 	}
 
-	public void setStudentId(String studentId) {
+	public void setStudentId(Integer studentId) {
 		this.studentId = studentId;
 	}
 

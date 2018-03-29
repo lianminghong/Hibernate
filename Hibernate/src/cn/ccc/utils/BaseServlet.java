@@ -19,6 +19,7 @@ public abstract class BaseServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");// 解决前端接收中文乱码
 		String msg = request.getParameter("msg");
 		// 如果要访问的方法为空，则默认执行execute方法
 		if (null == msg || msg.trim().equals("")) {

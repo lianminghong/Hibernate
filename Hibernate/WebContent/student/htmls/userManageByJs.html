@@ -55,18 +55,18 @@
         </form>
     </div>
     <div id="dlg-buttons">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveStudent()">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
     </div>
     <!-- 新增面板 end -->
 
 </body>
 <script type="text/javascript">
+    var url;        //请求接口
+    var editing;    //判断用户是否处于编辑状态 
+    var flag;       //判断新增和修改方法
 
     $(function () {
-        var url;
-        var editing; //判断用户是否处于编辑状态 
-        var flag;      //判断新增和修改方法
         $('#tt').datagrid({
             title: "Load Data",
             url: "/Hibernate/DemoJdbcServlet?msg=execute",
@@ -125,21 +125,38 @@
                         // $('#tt').datagrid('beginEdit', editing);
                         $('#dlg').dialog('open').dialog('setTitle', '添加');
                         $('#fm').form('clear');
-                        url = '';
+                        url = '/Hibernate/DemoJdbcServlet?msg=addStudents';
                     }
                 }
             }, {
                 text: '修改',
                 iconCls: 'icon-edit',
                 handler: function () {
-
+                    var row = $('#tt').datagrid('getSelected');
 
                 }
             }, {
                 text: '删除',
                 iconCls: 'icon-remove',
                 handler: function () {
-
+                    var arr = $('#tt').datagrid('getSelections');
+                    if (arr.length <= 0) {
+                        $.messager.alert('提示信息', '请选择要删除的行');
+                    } else {
+                        // $.messager.show({title:"提示信息2",msg:"删除成功"});
+                        $.messager.confirm('提示信息', '确认删除?', function (arg) {
+                            if (arg) {
+                                var ids = "";
+                                arr.forEach(function (value, index, array) {
+                                    ids += array[index].studentId + ',';
+                                });
+                                ids = ids.substring(0, ids.length - 1);
+                                delStudent(ids);//调用删除方法
+                            } else {
+                                return;
+                            }
+                        });
+                    }
                 }
             }]
         });
@@ -155,6 +172,50 @@
             studentName: $('#studentName').val()
         });
     }
+
+    /**  
+     * 添加  
+     */
+    function saveStudent() {
+        $('#fm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert('系统提示', "保存成功", "info");
+                    $('#dlg').dialog('close');
+                    $('#tt').datagrid('reload');
+                } else {
+                    $.messager.alert('系统提示', result.errorMsg);
+                    return;
+                }
+            }
+        });
+    }
+
+    /**  
+     * 删除
+     */
+    function delStudent(studentIds) {
+        url = "/Hibernate/DemoJdbcServlet?msg=delStudents";
+        $.post(url, { studentIds: studentIds }, function (result) {
+            var result = eval('(' + result + ')');
+            if (result.success) {
+                $.messager.show({
+                    title: '提示信息',
+                    msg: result.sucMsg
+                });
+                $('#tt').datagrid('reload');
+            } else {
+                $.messager.alert('系统提示', '删除失败');
+                return;
+            }
+        });
+    }
+
 </script>
 
 </html>

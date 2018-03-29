@@ -4,9 +4,12 @@
 <!-- Generated 2018-1-5 10:42:05 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
 	<class name="cn.ccc.domain.Student" table="students">
-		<id name="studentId" type="java.lang.String">
-			<column name="Id" length="8" />
+		<id name="Id" type="java.lang.Integer">
+			<column name="Id" length="11" />
 		</id>
+		<property name="studentId" type="java.lang.Integer">
+			<column name="studentId" length="11"></column>
+		</property>
 		<property name="studentName" type="java.lang.String">
 			<column name="name" length="40"></column>
 		</property>
