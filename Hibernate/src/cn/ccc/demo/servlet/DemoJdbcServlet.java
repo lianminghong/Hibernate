@@ -175,7 +175,7 @@ public class DemoJdbcServlet extends BaseServlet {
 		// request.getRequestDispatcher("/jsps/demo.jsp").forward(request,
 		// response);
 	}
-	
+
 	/**
 	 * 更新
 	 * 
@@ -188,24 +188,29 @@ public class DemoJdbcServlet extends BaseServlet {
 		String studentName = request.getParameter("studentName");
 		String age = request.getParameter("age");
 		String deptId = request.getParameter("deptId");
-		
+
 		PrintWriter out = response.getWriter();
 		JSONObject result = new JSONObject();
-		
+
 		Student student = new Student();
 		student.setStudentId(Integer.parseInt(studentId));
 		student.setStudentName(studentName);
 		student.setAge(Integer.parseInt(age));
 		student.setDeptId(deptId);
-		
+
 		boolean isUpdate = impl.updateStudent(student);
-		/*上次codding*/
-		
+		if (isUpdate) {
+			result.put("success", true);
+			result.put("sucMsg", "学号为：" + studentId + "更新成功");
+		} else {
+			result.put("success", false);
+			result.put("errorMsg", "更新失败！");
+		}
+
 		out.print(result);
 		out.flush();
 		out.close();
-		
-		
+
 	}
 
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/icon.css">
+
+    <script type="text/javascript" src="../../easyUI/jquery.min.js"></script>
+    <script type="text/javascript" src="../../easyUI/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../easyUI/locale/easyui-lang-zh_CN.js"></script>
+
+    <!-- 导入自定义验证js -->
+    <script type="text/javascript" src="../js/ow-validate.js"></script>
+
+
+</head>
+
+<body class="easyui-layout">
+    <!-- 表格 start -->
+    <table id="tt" class="easyui-datagrid" style="width:auto;height:auto"></table>
+    <!-- 表格 end -->
+
+
+</body>
+<script type="text/javascript">
+    var url;        //请求接口 
+    var editing;    //判断用户是否处于编辑状态 
+    var flag;       //判断新增和修改方法 
+
+    $(function () {
+        $('#tt').datagrid({
+            title: '权限列表',
+            url: '',
+            method: 'post',
+            columns: [[{
+                field: 'id',
+                title: '部门编号',
+                width: 100
+            }, {
+                field: 'name',
+                title: '部门名称',
+                width: 100
+            }
+            ]],
+            fitColumns: true,//自适应宽度，防止水平滚动
+            iconCls: 'icon-search',
+            striped: true,//隔行变色
+            pagination: true,//显示页栏
+            pageNumber: 1,//pagination : true时才生效  
+            pageSize: 10,//每页显示的记录条数，默认为10 
+            //pageSize: defaultPageSize,
+            pageList: [10, 15, 30, 45],//可以设置每页记录条数的列表           
+            beforePageText: '第',//页数文本框前显示的汉字           
+            afterPageText: '页    共 {pages} 页',
+            displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
+            pagePosition: 'bottom',
+            rownumbers: true,//是否显示行号 
+            loadMsg: '玩命加载中',
+            //工具栏
+            toolbar: [{
+                
+            }],
+
+        });
+    });
+
+</script>
+
+</html>

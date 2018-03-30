@@ -20,12 +20,14 @@
 
 <body class="easyui-layout">
     <!-- 表格 start -->
-    <table id="tt" class="easyui-datagrid" style="width:auto;height:auto"></table>
+    <table id="tt" class="easyui-datagrid" style="width:auto;height:auto">
+    </table>
     <!-- 表格 end -->
 
+
     <!-- 新增面板 start -->
-    <div id="dlg" class="easyui-dialog" style="width:400px;height:250px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
-        <form id="fm" method="post">
+    <div id="insert-dlg" class="easyui-dialog" style="width:400px;height:250px;padding:10px 20px" closed="true" buttons="#insert-dlg-buttons">
+        <form id="save-fm" method="post">
             <table cellspacing="10px;">
                 <tr>
                     <td>学号:</td>
@@ -54,11 +56,51 @@
             </table>
         </form>
     </div>
-    <div id="dlg-buttons">
+    <div id="insert-dlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveStudent()">保存</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#insert-dlg').dialog('close')">关闭</a>
     </div>
     <!-- 新增面板 end -->
+
+    <!-- 修改面板 start -->
+    <div id="update-dlg" class="easyui-dialog" style="width:400px;height:250px;padding:10px 20px" closed="true" buttons="#update-dlg-buttons">
+        <form id="update-fm" method="post">
+            <table cellspacing="10px;">
+                <tr>
+                    <td>学号:</td>
+                    <td>
+                        <input name="studentId" class="easyui-validatebox" data-options="required:true,validType:['integer','length[1,5]']" style="width: 200px;"
+                            disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td>姓名:</td>
+                    <td>
+                        <input name="studentName" class="easyui-validatebox" data-options="required:true,validType:'name'" style="width: 200px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>年龄:</td>
+                    <td>
+                        <input name="age" class="easyui-validatebox" data-options="required:true,validType:'age'" style="width: 200px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>部门编号:</td>
+                    <td>
+                        <input name="deptId" class="easyui-validatebox" data-options="required:true,validType:'integer'" style="width: 200px;">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="update-dlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="updateStudent()">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#update-dlg').dialog('close')">关闭</a>
+    </div>
+    <!-- 修改面板 end -->
+
+
 
 </body>
 <script type="text/javascript">
@@ -68,9 +110,9 @@
 
     $(function () {
         $('#tt').datagrid({
-            title: "Load Data",
-            url: "/Hibernate/DemoJdbcServlet?msg=execute",
-            method: "post",
+            title: 'Load Data',
+            url: '/Hibernate/DemoJdbcServlet?msg=execute',
+            method: 'post',
             columns: [[{
                 field: 'studentId',
                 title: '学号',
@@ -105,34 +147,44 @@
             beforePageText: '第',//页数文本框前显示的汉字           
             afterPageText: '页    共 {pages} 页',
             displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
-            pagePosition: "bottom",
+            pagePosition: 'bottom',
             rownumbers: true,//是否显示行号 
-            loadMsg: "玩命加载中",
+            loadMsg: '玩命加载中',
             //工具栏
-            toolbar: [{
+            toolbar: [[{
                 text: '新增',
                 iconCls: 'icon-add',
                 handler: function () {
-                    if (editing == undefined) {
-                        // flag = 'add';
-                        //1 先取消所有的选中状态
-                        // $('#tt').datagrid('unselectAll');
-                        //2追加一行
-                        // $('#tt').datagrid('appendRow', { description: '' });
-                        //3获取当前页的行号
-                        // editing = $('#tt').datagrid('getRows').length - 1;
-                        //4开启编辑状态
-                        // $('#tt').datagrid('beginEdit', editing);
-                        $('#dlg').dialog('open').dialog('setTitle', '添加');
-                        $('#fm').form('clear');
-                        url = '/Hibernate/DemoJdbcServlet?msg=addStudents';
-                    }
+                    // flag = 'add';
+                    //1 先取消所有的选中状态
+                    // $('#tt').datagrid('unselectAll');
+                    //2追加一行
+                    // $('#tt').datagrid('appendRow', { description: '' });
+                    //3获取当前页的行号
+                    // editing = $('#tt').datagrid('getRows').length - 1;
+                    //4开启编辑状态
+                    // $('#tt').datagrid('beginEdit', editing);
+                    $('#insert-dlg').dialog('open').dialog('setTitle', '添加');
+                    $('#save-fm').form('clear');
+                    url = '/Hibernate/DemoJdbcServlet?msg=addStudents';
                 }
             }, {
                 text: '修改',
                 iconCls: 'icon-edit',
                 handler: function () {
-                    var row = $('#tt').datagrid('getSelected');
+                    // var row = $('#tt').datagrid('getSelected');
+                    var rows = $('#tt').datagrid('getSelections');
+                    if (rows.length == 0) {
+                        $.messager.alert('系统提示', '请选择要修改的行！', 'warning');
+                        return;
+                    } else if (rows.length > 1) {
+                        $.messager.alert('系统提示', '只能1行进行修改！', 'warning');
+                        return;
+                    } else {
+                        $('#update-dlg').dialog('open').dialog('setTitle', '更新');
+                        $('#update-fm').form('load', rows[0]);
+                        url = '/Hibernate/DemoJdbcServlet?msg=updateStudent';
+                    }
 
                 }
             }, {
@@ -141,10 +193,10 @@
                 handler: function () {
                     var arr = $('#tt').datagrid('getSelections');
                     if (arr.length <= 0) {
-                        $.messager.alert('提示信息', '请选择要删除的行');
+                        $.messager.alert('系统提示', '请选择要删除的行', 'warning');
                     } else {
-                        // $.messager.show({title:"提示信息2",msg:"删除成功"});
-                        $.messager.confirm('提示信息', '确认删除?', function (arg) {
+                        // $.messager.show({title:"系统提示2",msg:"删除成功"});
+                        $.messager.confirm('系统提示', '确认删除?', function (arg) {
                             if (arg) {
                                 var ids = "";
                                 arr.forEach(function (value, index, array) {
@@ -158,7 +210,16 @@
                         });
                     }
                 }
-            }]
+            }], '-', {
+                text: '<span>姓名<span><input type="text" id="username"/>性别<input type="text" id="usersex"/>'
+            }, '-', {
+                text: '这是toolbar输入框查询按钮',
+                iconCls: 'icon-search',
+                handler: function () {
+                    search();
+                }
+            }
+            ]
         });
 
     });
@@ -177,7 +238,7 @@
      * 添加  
      */
     function saveStudent() {
-        $('#fm').form('submit', {
+        $('#save-fm').form('submit', {
             url: url,
             onSubmit: function () {
                 return $(this).form('validate');
@@ -185,11 +246,11 @@
             success: function (result) {
                 var result = eval('(' + result + ')');
                 if (result.success) {
-                    $.messager.alert('系统提示', "保存成功", "info");
-                    $('#dlg').dialog('close');
+                    $.messager.alert('系统提示', '保存成功', 'info');
+                    $('#insert-dlg').dialog('close');
                     $('#tt').datagrid('reload');
                 } else {
-                    $.messager.alert('系统提示', result.errorMsg);
+                    $.messager.alert('系统提示', result.errorMsg, 'error');
                     return;
                 }
             }
@@ -205,17 +266,39 @@
             var result = eval('(' + result + ')');
             if (result.success) {
                 $.messager.show({
-                    title: '提示信息',
+                    title: '系统提示',
                     msg: result.sucMsg
                 });
                 $('#tt').datagrid('reload');
             } else {
-                $.messager.alert('系统提示', '删除失败');
+                $.messager.alert('系统提示', '删除失败', 'error');
                 return;
             }
         });
     }
 
+    /**  
+     * 更新
+     */
+    function updateStudent() {
+        $('#update-fm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert('系统提示', result.sucMsg, 'info');
+                    $('#update-dlg').dialog('close');
+                    $('#tt').datagrid('reload');
+                } else {
+                    $.messager.alert('系统提示', result.errorMsg, 'info');
+                    return;
+                }
+            }
+        });
+    }
 </script>
 
 </html>

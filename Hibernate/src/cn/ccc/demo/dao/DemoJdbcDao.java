@@ -238,6 +238,7 @@ public class DemoJdbcDao {
 		query.setParameter("studentId", student.getStudentId());
 		try {
 			updateNum = query.executeUpdate();// 更新条数
+			trans.commit();
 			if (updateNum > 0) {
 				System.out.println("更新成功，更新" + updateNum + "条记录");
 				isUpdate = true;

@@ -117,7 +117,7 @@ public class DemoJdbcServiceImpl implements DemoJdbcService {
 			return false;
 
 		boolean isUpdate = false;
-		String hql = "update Student s set s.studentName = :studentName and s.age = :age and s.deptId = :deptId where 1=1 and s.studentId = :studentId";
+		String hql = "update Student s set s.studentName = :studentName , s.age = :age , s.deptId = :deptId where 1=1 and s.studentId = :studentId";
 
 		isUpdate = dao.updateStudent(hql,student);
 		
