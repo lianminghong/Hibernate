@@ -225,6 +225,14 @@ public class DemoJdbcDao {
 		return isExits;
 	}
 
+	
+	/**
+	 * ¸üĞÂ
+	 * 
+	 * @param hql
+	 * @param student
+	 * @return
+	 */
 	public Boolean updateStudent(String hql, Student student) {
 		boolean isUpdate = false;
 		int updateNum = 0;
